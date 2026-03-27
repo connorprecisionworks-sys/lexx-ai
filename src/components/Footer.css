@@ -1,0 +1,100 @@
+.footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.7);
+  padding-top: 4rem;
+}
+
+.footer__inner {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 3rem;
+  padding-bottom: 3rem;
+}
+
+.footer__brand p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-top: 1rem;
+  color: rgba(255,255,255,0.55);
+}
+
+.footer__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: white;
+  font-size: 1.1rem;
+  font-family: 'DM Sans', sans-serif;
+}
+.footer__logo strong { font-weight: 600; }
+
+.footer__logo-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--teal);
+  color: white;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'DM Serif Display', serif;
+  font-size: 1rem;
+}
+
+.footer__hipaa {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem !important;
+}
+.hipaa-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--teal-light);
+  border: 1px solid rgba(14,124,123,0.4);
+  padding: 0.25rem 0.6rem;
+  border-radius: 4px;
+  background: rgba(14,124,123,0.1);
+}
+
+.footer__col h4 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 1rem;
+}
+
+.footer__col a,
+.footer__link-placeholder {
+  display: block;
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 0.65rem;
+  transition: color 0.2s;
+  cursor: pointer;
+}
+.footer__col a:hover,
+.footer__link-placeholder:hover { color: white; }
+
+.footer__bottom {
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: 1.25rem 0;
+}
+.footer__bottom .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.35);
+}
+
+@media (max-width: 768px) {
+  .footer__inner { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .footer__brand { grid-column: 1 / -1; }
+  .footer__bottom .container { flex-direction: column; align-items: flex-start; }
+}

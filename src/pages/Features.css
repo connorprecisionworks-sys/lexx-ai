@@ -1,0 +1,18 @@
+.feat-section--alt { background: var(--bg); }
+.feat-section__header { text-align: center; margin-bottom: 3rem; }
+.feat-section__header h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); margin-bottom: 0.75rem; }
+.feat-section__header p { color: var(--slate); font-size: 1rem; max-width: 520px; margin: 0 auto; }
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.feat-card__icon { font-size: 1.6rem; margin-bottom: 0.85rem; }
+.feat-card h3 { font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 1rem; margin-bottom: 0.5rem; }
+.feat-card p { font-size: 0.87rem; color: var(--slate); line-height: 1.7; }
+
+@media (max-width: 768px) {
+  .feat-grid { grid-template-columns: 1fr; }
+}
