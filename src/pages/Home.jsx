@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from 'react-router-dom';
 import './Home.css';
 
-//  Rotating hero words 
 const ROTATING_WORDS = [
   "to demand letter",
   "to narrative",
@@ -10,35 +9,54 @@ const ROTATING_WORDS = [
   "to case summary",
 ];
 
-//  Rest of page data 
 const problems = [
   {
-    icon: '',
     title: 'Medical records are dense and disorganized',
     desc: 'Thousands of pages of unstructured clinical notes, lab results, imaging reports, and billing codes buried across multiple providers.'
   },
   {
-    icon: '⏳',
     title: 'Manual review is costing you billable hours',
     desc: "Paralegals and associates spend weeks manually reading records — time that doesn't scale and eats into your firm's profitability."
   },
   {
-    icon: '',
     title: 'Critical details get missed',
     desc: 'Pre-existing conditions, causation gaps, and inconsistencies buried on page 847 of 1,200 can sink a case or delay settlement.'
   },
 ];
 
 const solutions = [
-  { icon: '', label: 'AI-Powered Extraction' },
-  { icon: '', label: 'HIPAA-Grade Security' },
-  { icon: '', label: 'Instant Chronologies' },
+  { label: 'AI-Powered Extraction' },
+  { label: 'HIPAA-Grade Security' },
+  { label: 'Instant Chronologies' },
 ];
+
+// Hook: fade-up on scroll into view
+function useFadeUp(threshold = 0.15) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
 
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const [wordHeight, setWordHeight] = useState(80);
   const firstWordRef = useRef(null);
+
+  // Scroll refs
+  const [problemsRef, problemsVisible] = useFadeUp();
+  const [solutionRef, solutionVisible] = useFadeUp();
+  const [ctaRef, ctaVisible] = useFadeUp();
+  const [dashboardRef, dashboardVisible] = useFadeUp(0.05);
 
   useEffect(() => {
     if (firstWordRef.current) {
@@ -46,8 +64,36 @@ export default function Home() {
     }
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % ROTATING_WORDS.length);
-    }, 2200);
+    }, 1500);
     return () => clearInterval(interval);
+  }, []);
+
+  // Cinematic smooth scroll
+  useEffect(() => {
+    let current = window.scrollY;
+    let target = window.scrollY;
+    let rafId;
+    const ease = 0.06; // lower = slower/smoother
+
+    const onWheel = (e) => {
+      e.preventDefault();
+      target += e.deltaY * 0.7;
+      target = Math.max(0, Math.min(target, document.body.scrollHeight - window.innerHeight));
+    };
+
+    const loop = () => {
+      current += (target - current) * ease;
+      window.scrollTo(0, current);
+      rafId = requestAnimationFrame(loop);
+    };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    rafId = requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener('wheel', onWheel);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
@@ -82,7 +128,7 @@ export default function Home() {
           letter-spacing: 0.08em;
           text-transform: uppercase;
           margin-bottom: 40px;
-          animation: lexxFadeUp 0.6s ease both;
+          animation: lexxFadeUp 0.8s ease both;
         }
 
         .lexx-badge::before {
@@ -100,7 +146,7 @@ export default function Home() {
           line-height: 1.05;
           color: #0a0a0a;
           margin: 0;
-          animation: lexxFadeUp 0.6s ease 0.1s both;
+          animation: lexxFadeUp 0.8s ease 0.15s both;
         }
 
         .lexx-rotating-wrapper {
@@ -112,7 +158,7 @@ export default function Home() {
         .lexx-rotating-inner {
           display: flex;
           flex-direction: column;
-          transition: transform 0.7s cubic-bezier(0.77, 0, 0.175, 1);
+          transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .lexx-rotating-word {
@@ -134,14 +180,14 @@ export default function Home() {
           font-weight: 300;
           max-width: 520px;
           line-height: 1.7;
-          animation: lexxFadeUp 0.6s ease 0.2s both;
+          animation: lexxFadeUp 0.8s ease 0.3s both;
         }
 
         .lexx-actions {
           display: flex;
           gap: 16px;
           margin-top: 40px;
-          animation: lexxFadeUp 0.6s ease 0.3s both;
+          animation: lexxFadeUp 0.8s ease 0.45s both;
         }
 
         .lexx-btn-primary {
@@ -189,7 +235,7 @@ export default function Home() {
           margin-top: 56px;
           padding-top: 40px;
           border-top: 1px solid #d8d8d6;
-          animation: lexxFadeUp 0.6s ease 0.4s both;
+          animation: lexxFadeUp 0.8s ease 0.6s both;
         }
 
         .lexx-stat-number {
@@ -209,12 +255,20 @@ export default function Home() {
           display: block;
         }
 
+        /* Dashboard */
         .lexx-dashboard {
           width: 100%;
           max-width: 900px;
           margin-top: 64px;
-          animation: lexxFadeUp 0.8s ease 0.5s both;
           position: relative;
+          opacity: 0;
+          transform: translateY(40px);
+          transition: opacity 1.2s ease, transform 1.2s ease;
+        }
+
+        .lexx-dashboard.visible {
+          opacity: 1;
+          transform: translateY(0);
         }
 
         .lexx-dashboard-label {
@@ -242,8 +296,20 @@ export default function Home() {
           display: block;
         }
 
+        /* Scroll fade-up utility */
+        .fade-up {
+          opacity: 0;
+          transform: translateY(40px);
+          transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+
+        .fade-up.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
         @keyframes lexxFadeUp {
-          from { opacity: 0; transform: translateY(24px); }
+          from { opacity: 0; transform: translateY(28px); }
           to { opacity: 1; transform: translateY(0); }
         }
 
@@ -305,7 +371,10 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="lexx-dashboard">
+        <div
+          ref={dashboardRef}
+          className={`lexx-dashboard${dashboardVisible ? ' visible' : ''}`}
+        >
           <span className="lexx-dashboard-label">Live Dashboard</span>
           <img
             src="/dashboard.png"
@@ -318,25 +387,31 @@ export default function Home() {
       {/* PROBLEM */}
       <section className="section problem-section">
         <div className="container">
-          <div className="problem-section__header">
+          <div
+            ref={problemsRef}
+            className={`problem-section__header fade-up${problemsVisible ? ' visible' : ''}`}
+          >
             <h2>Medical record review<br />shouldn't be this hard</h2>
             <p>Your team is spending days on work that should take minutes. There's a better way.</p>
           </div>
           <div className="problem-section__grid">
-            {problems.map(p => (
-              <div key={p.title} className="problem-card">
-                <div className="problem-card__icon">{p.icon}</div>
-                <h3>{p.title}</h3>
-                <p>{p.desc}</p>
-              </div>
+            {problems.map((p, i) => (
+              <FadeUpCard key={p.title} delay={i * 120}>
+                <div className="problem-card">
+                  <h3>{p.title}</h3>
+                  <p>{p.desc}</p>
+                </div>
+              </FadeUpCard>
             ))}
           </div>
-          <div className="solution-callout">
-            <div className="solution-callout__check"> How Lexx AI Solves This</div>
+          <div
+            ref={solutionRef}
+            className={`solution-callout fade-up${solutionVisible ? ' visible' : ''}`}
+          >
+            <div className="solution-callout__check">How Lexx AI Solves This</div>
             <div className="solution-callout__row">
               {solutions.map(s => (
                 <div key={s.label} className="solution-callout__item">
-                  <span>{s.icon}</span>
                   <span>{s.label}</span>
                 </div>
               ))}
@@ -350,7 +425,10 @@ export default function Home() {
       {/* BOTTOM CTA */}
       <section className="bottom-cta section">
         <div className="container">
-          <div className="bottom-cta__inner">
+          <div
+            ref={ctaRef}
+            className={`bottom-cta__inner fade-up${ctaVisible ? ' visible' : ''}`}
+          >
             <h2>Ready to cut record review time by 85%?</h2>
             <p>Join 500+ law firms using Lexx AI to win more cases, faster.</p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -361,5 +439,33 @@ export default function Home() {
         </div>
       </section>
     </main>
+  );
+}
+
+// Reusable staggered fade-up card
+function FadeUpCard({ children, delay = 0 }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <div
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'translateY(0)' : 'translateY(40px)',
+        transition: `opacity 0.9s ease ${delay}ms, transform 0.9s ease ${delay}ms`,
+      }}
+    >
+      {children}
+    </div>
   );
 }
