@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import Lenis from '@studio-freight/lenis';
 import { Link } from 'react-router-dom';
 import './Home.css';
 
@@ -91,31 +92,21 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Smooth but responsive scroll
+  // Lenis smooth scroll
   useEffect(() => {
-    let curr = window.scrollY;
-    let target = window.scrollY;
-    let rafId;
-    const ease = 0.22;
+    const lenis = new Lenis({
+      duration: 1.4,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smooth: true,
+    });
 
-    const onWheel = (e) => {
-      e.preventDefault();
-      target += e.deltaY * 1.0;
-      target = Math.max(0, Math.min(target, document.body.scrollHeight - window.innerHeight));
-    };
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
 
-    const loop = () => {
-      curr += (target - curr) * ease;
-      window.scrollTo(0, curr);
-      rafId = requestAnimationFrame(loop);
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: false });
-    rafId = requestAnimationFrame(loop);
-    return () => {
-      window.removeEventListener('wheel', onWheel);
-      cancelAnimationFrame(rafId);
-    };
+    return () => lenis.destroy();
   }, []);
 
   return (
