@@ -26,11 +26,10 @@ const problems = [
 
 const solutions = [
   { label: 'AI-Powered Extraction' },
-  { label: 'HIPAA-Grade Security' },
   { label: 'Instant Chronologies' },
+  { label: 'Built for Litigators' },
 ];
 
-// Hook: fade-up on scroll into view
 function useFadeUp(threshold = 0.15) {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
@@ -47,12 +46,35 @@ function useFadeUp(threshold = 0.15) {
   return [ref, visible];
 }
 
+function FadeUpCard({ children, delay = 0 }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <div ref={ref} style={{
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(36px)',
+      transition: `opacity 0.85s ease ${delay}ms, transform 0.85s ease ${delay}ms`,
+    }}>
+      {children}
+    </div>
+  );
+}
+
 export default function Home() {
   const [current, setCurrent] = useState(0);
   const [wordHeight, setWordHeight] = useState(80);
   const firstWordRef = useRef(null);
 
-  // Scroll refs
   const [problemsRef, problemsVisible] = useFadeUp();
   const [solutionRef, solutionVisible] = useFadeUp();
   const [ctaRef, ctaVisible] = useFadeUp();
@@ -68,28 +90,27 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Cinematic smooth scroll
+  // Cinematic scroll — doubled speed from previous (0.12 vs 0.06)
   useEffect(() => {
-    let current = window.scrollY;
+    let curr = window.scrollY;
     let target = window.scrollY;
     let rafId;
-    const ease = 0.06; // lower = slower/smoother
+    const ease = 0.12;
 
     const onWheel = (e) => {
       e.preventDefault();
-      target += e.deltaY * 0.7;
+      target += e.deltaY * 0.85;
       target = Math.max(0, Math.min(target, document.body.scrollHeight - window.innerHeight));
     };
 
     const loop = () => {
-      current += (target - current) * ease;
-      window.scrollTo(0, current);
+      curr += (target - curr) * ease;
+      window.scrollTo(0, curr);
       rafId = requestAnimationFrame(loop);
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
     rafId = requestAnimationFrame(loop);
-
     return () => {
       window.removeEventListener('wheel', onWheel);
       cancelAnimationFrame(rafId);
@@ -158,7 +179,7 @@ export default function Home() {
         .lexx-rotating-inner {
           display: flex;
           flex-direction: column;
-          transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+          transition: transform 0.55s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
         .lexx-rotating-word {
@@ -229,30 +250,39 @@ export default function Home() {
           background: #f0f0ee;
         }
 
-        .lexx-stats {
+        /* Early access bar */
+        .lexx-early-access {
           display: flex;
-          gap: 48px;
+          gap: 32px;
           margin-top: 56px;
           padding-top: 40px;
           border-top: 1px solid #d8d8d6;
           animation: lexxFadeUp 0.8s ease 0.6s both;
+          align-items: center;
+          justify-content: center;
+          flex-wrap: wrap;
         }
 
-        .lexx-stat-number {
-          font-family: "Playfair Display", serif;
-          font-size: 2rem;
-          font-weight: 900;
-          color: #0a0a0a;
-          display: block;
-        }
-
-        .lexx-stat-label {
+        .lexx-early-tag {
+          background: #0a0a0a;
+          color: #f8f8f6;
+          padding: 8px 20px;
+          border-radius: 100px;
           font-size: 0.8rem;
-          color: #a0a09e;
-          font-weight: 400;
-          letter-spacing: 0.04em;
-          margin-top: 4px;
-          display: block;
+          font-weight: 600;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
+        .lexx-early-text {
+          font-size: 0.92rem;
+          color: #606060;
+          line-height: 1.6;
+          max-width: 380px;
+        }
+
+        .lexx-early-text strong {
+          color: #0a0a0a;
         }
 
         /* Dashboard */
@@ -296,11 +326,10 @@ export default function Home() {
           display: block;
         }
 
-        /* Scroll fade-up utility */
         .fade-up {
           opacity: 0;
-          transform: translateY(40px);
-          transition: opacity 0.9s ease, transform 0.9s ease;
+          transform: translateY(36px);
+          transition: opacity 0.85s ease, transform 0.85s ease;
         }
 
         .fade-up.visible {
@@ -315,7 +344,7 @@ export default function Home() {
 
         @media (max-width: 768px) {
           .lexx-hero { padding: 100px 24px 60px; }
-          .lexx-stats { gap: 24px; flex-wrap: wrap; justify-content: center; }
+          .lexx-early-access { gap: 16px; }
           .lexx-actions { flex-direction: column; width: 100%; }
           .lexx-btn-primary, .lexx-btn-secondary { justify-content: center; }
         }
@@ -323,7 +352,7 @@ export default function Home() {
 
       {/* HERO */}
       <section className="lexx-hero">
-        <div className="lexx-badge">Process</div>
+        <div className="lexx-badge">Now in Beta</div>
 
         <h1 className="lexx-headline">
           <span style={{ display: "block" }}>From record pile</span>
@@ -349,26 +378,20 @@ export default function Home() {
 
         <p className="lexx-sub">
           Lexx AI reads, extracts, and summarizes medical records so your team
-          can focus on strategy — not paperwork.
+          can focus on strategy — not paperwork. Built for personal injury and
+          anyone who needs to process records at scale.
         </p>
 
         <div className="lexx-actions">
-          <Link to="/contact" className="lexx-btn-primary">Request a Demo &rarr;</Link>
+          <Link to="/contact" className="lexx-btn-primary">Join the Waitlist &rarr;</Link>
           <Link to="/how-it-works" className="lexx-btn-secondary">See How It Works</Link>
         </div>
 
-        <div className="lexx-stats">
-          {[
-            { number: "85%", label: "Time Saved" },
-            { number: "3 min", label: "Avg. Review Time" },
-            { number: "99.2%", label: "Accuracy Rate" },
-            { number: "500+", label: "Cases Processed" },
-          ].map((stat) => (
-            <div key={stat.label} style={{ textAlign: "center" }}>
-              <span className="lexx-stat-number">{stat.number}</span>
-              <span className="lexx-stat-label">{stat.label}</span>
-            </div>
-          ))}
+        <div className="lexx-early-access">
+          <span className="lexx-early-tag">Early Access</span>
+          <p className="lexx-early-text">
+            We're onboarding our first beta firms now. <strong>Join the waitlist</strong> to get early access and shape the product with us.
+          </p>
         </div>
 
         <div
@@ -429,43 +452,15 @@ export default function Home() {
             ref={ctaRef}
             className={`bottom-cta__inner fade-up${ctaVisible ? ' visible' : ''}`}
           >
-            <h2>Ready to cut record review time by 85%?</h2>
-            <p>Join 500+ law firms using Lexx AI to win more cases, faster.</p>
+            <h2>Be one of the first firms to use Lexx AI.</h2>
+            <p>We're accepting a limited number of beta firms. Join the waitlist or book a call to see it live.</p>
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <Link to="/contact" className="btn-teal">Request Your Demo →</Link>
-              <Link to="/pricing" className="btn-secondary" style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}>View Pricing</Link>
+              <Link to="/contact" className="btn-teal">Join the Waitlist →</Link>
+              <Link to="/contact" className="btn-secondary" style={{ borderColor: 'rgba(255,255,255,0.3)', color: 'white' }}>Book a Demo Call</Link>
             </div>
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-// Reusable staggered fade-up card
-function FadeUpCard({ children, delay = 0 }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.1 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(40px)',
-        transition: `opacity 0.9s ease ${delay}ms, transform 0.9s ease ${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
   );
 }
