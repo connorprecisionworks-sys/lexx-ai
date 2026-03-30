@@ -308,7 +308,7 @@ export default function Home() {
         <div className="lexx-dashboard">
           <span className="lexx-dashboard-label">Live Dashboard</span>
           <img
-            src={`data:image/png;base64,${DASHBOARD_B64}`}
+            src="/dashboard.png"
             alt="Lexx AI Case Review Dashboard"
             className="lexx-dashboard-img"
           />
