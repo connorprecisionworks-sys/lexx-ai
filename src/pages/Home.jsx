@@ -75,6 +75,7 @@ export default function Home() {
   const [wordHeight, setWordHeight] = useState(80);
   const firstWordRef = useRef(null);
 
+  const [clientsRef, clientsVisible] = useFadeUp(0.2);
   const [problemsRef, problemsVisible] = useFadeUp();
   const [solutionRef, solutionVisible] = useFadeUp();
   const [ctaRef, ctaVisible] = useFadeUp();
@@ -90,16 +91,16 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  // Cinematic scroll — doubled speed from previous (0.12 vs 0.06)
+  // Smooth but responsive scroll
   useEffect(() => {
     let curr = window.scrollY;
     let target = window.scrollY;
     let rafId;
-    const ease = 0.12;
+    const ease = 0.22;
 
     const onWheel = (e) => {
       e.preventDefault();
-      target += e.deltaY * 0.85;
+      target += e.deltaY * 1.0;
       target = Math.max(0, Math.min(target, document.body.scrollHeight - window.innerHeight));
     };
 
@@ -250,7 +251,6 @@ export default function Home() {
           background: #f0f0ee;
         }
 
-        /* Early access bar */
         .lexx-early-access {
           display: flex;
           gap: 32px;
@@ -272,6 +272,7 @@ export default function Home() {
           font-weight: 600;
           letter-spacing: 0.06em;
           text-transform: uppercase;
+          white-space: nowrap;
         }
 
         .lexx-early-text {
@@ -279,11 +280,10 @@ export default function Home() {
           color: #606060;
           line-height: 1.6;
           max-width: 380px;
+          margin: 0;
         }
 
-        .lexx-early-text strong {
-          color: #0a0a0a;
-        }
+        .lexx-early-text strong { color: #0a0a0a; }
 
         /* Dashboard */
         .lexx-dashboard {
@@ -326,6 +326,87 @@ export default function Home() {
           display: block;
         }
 
+        /* Clients deserve better section */
+        .clients-section {
+          background: #0a0a0a;
+          padding: 100px 60px;
+          text-align: center;
+        }
+
+        .clients-section__inner {
+          max-width: 760px;
+          margin: 0 auto;
+          opacity: 0;
+          transform: translateY(36px);
+          transition: opacity 1s ease, transform 1s ease;
+        }
+
+        .clients-section__inner.visible {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        .clients-section__label {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: rgba(255,255,255,0.1);
+          color: #f8f8f6;
+          padding: 5px 14px;
+          border-radius: 100px;
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          margin-bottom: 32px;
+          font-family: "DM Sans", sans-serif;
+        }
+
+        .clients-section__headline {
+          font-family: "Playfair Display", serif;
+          font-size: clamp(2.2rem, 5vw, 3.8rem);
+          font-weight: 900;
+          color: #f8f8f6;
+          line-height: 1.1;
+          margin: 0 0 24px;
+        }
+
+        .clients-section__headline em {
+          font-style: italic;
+          color: #a0a09e;
+        }
+
+        .clients-section__sub {
+          font-size: 1.05rem;
+          color: rgba(248,248,246,0.6);
+          line-height: 1.75;
+          max-width: 540px;
+          margin: 0 auto 40px;
+          font-family: "DM Sans", sans-serif;
+        }
+
+        .clients-section__cta {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: #f8f8f6;
+          color: #0a0a0a;
+          padding: 14px 32px;
+          border-radius: 8px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          font-family: "DM Sans", sans-serif;
+          text-decoration: none;
+          transition: transform 0.2s, box-shadow 0.2s;
+          box-shadow: 0 2px 16px rgba(255,255,255,0.1);
+        }
+
+        .clients-section__cta:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+        }
+
+        /* Fade up utility */
         .fade-up {
           opacity: 0;
           transform: translateY(36px);
@@ -347,6 +428,7 @@ export default function Home() {
           .lexx-early-access { gap: 16px; }
           .lexx-actions { flex-direction: column; width: 100%; }
           .lexx-btn-primary, .lexx-btn-secondary { justify-content: center; }
+          .clients-section { padding: 72px 24px; }
         }
       `}</style>
 
@@ -404,6 +486,26 @@ export default function Home() {
             alt="Lexx AI Case Review Dashboard"
             className="lexx-dashboard-img"
           />
+        </div>
+      </section>
+
+      {/* YOUR CLIENTS DESERVE BETTER */}
+      <section className="clients-section">
+        <div
+          ref={clientsRef}
+          className={`clients-section__inner${clientsVisible ? ' visible' : ''}`}
+        >
+          <div className="clients-section__label">Why it matters</div>
+          <h2 className="clients-section__headline">
+            Your clients deserve<br /><em>better than buried records.</em>
+          </h2>
+          <p className="clients-section__sub">
+            Every missed detail is a missed opportunity — for your case, your client, and your firm.
+            Lexx AI makes sure nothing gets left on the table.
+          </p>
+          <Link to="/contact" className="clients-section__cta">
+            Get Early Access &rarr;
+          </Link>
         </div>
       </section>
 
