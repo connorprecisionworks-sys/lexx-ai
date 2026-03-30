@@ -77,7 +77,7 @@ export default function Pricing() {
     <main>
       <section className="pricing-hero section" style={{ background: 'linear-gradient(160deg, #f8fafc 0%, #eef4f4 100%)', borderBottom: '1px solid var(--border)' }}>
         <div className="container" style={{ textAlign: 'center' }}>
-          <div className="section-label" style={{ margin: '0 auto 1.25rem' }}><span>●</span> Pricing</div>
+          <div className="section-label" style={{ margin: '0 auto 1.25rem' }}><span></span> Pricing</div>
           <h1>Transparent pricing.<br /><span style={{ color: 'var(--teal)', fontStyle: 'italic' }}>No surprises.</span></h1>
           <p style={{ color: 'var(--slate)', marginTop: '1rem', fontSize: '1.05rem' }}>Start free. Scale as your caseload grows.</p>
           <div className="pricing-toggle">
@@ -109,7 +109,7 @@ export default function Pricing() {
                 </Link>
                 <ul className="pricing-card__features">
                   {p.features.map(f => (
-                    <li key={f}><span className="check">✓</span> {f}</li>
+                    <li key={f}><span className="check"></span> {f}</li>
                   ))}
                 </ul>
               </div>
@@ -122,7 +122,7 @@ export default function Pricing() {
       <section className="section" style={{ background: 'var(--bg)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <div className="section-label" style={{ margin: '0 auto 1.25rem' }}><span>●</span> FAQ</div>
+            <div className="section-label" style={{ margin: '0 auto 1.25rem' }}><span></span> FAQ</div>
             <h2>Frequently asked questions</h2>
           </div>
           <div className="faq-list">

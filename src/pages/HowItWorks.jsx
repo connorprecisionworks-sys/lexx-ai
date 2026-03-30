@@ -29,12 +29,12 @@ const steps = [
 ];
 
 const useCases = [
-  { icon: '🏥', title: 'Personal Injury', desc: 'Causation analysis, gap identification, treating vs. IME discrepancies.' },
-  { icon: '⚗️', title: 'Mass Tort', desc: 'Scale record review across thousands of plaintiffs with consistent AI analysis.' },
-  { icon: '👶', title: 'Medical Malpractice', desc: 'Standard of care analysis, event sequencing, and provider note extraction.' },
-  { icon: '🧑‍🦽', title: 'Workers\' Comp', desc: 'Disability timelines, return-to-work documentation, and injury causation.' },
-  { icon: '💊', title: 'Pharmaceutical Litigation', desc: 'Drug event timelines, adverse reaction documentation, and dosage histories.' },
-  { icon: '🏗️', title: 'Construction Injury', desc: 'Trauma record analysis, surgical history, and long-term prognosis extraction.' },
+  { icon: '', title: 'Personal Injury', desc: 'Causation analysis, gap identification, treating vs. IME discrepancies.' },
+  { icon: '', title: 'Mass Tort', desc: 'Scale record review across thousands of plaintiffs with consistent AI analysis.' },
+  { icon: '', title: 'Medical Malpractice', desc: 'Standard of care analysis, event sequencing, and provider note extraction.' },
+  { icon: '‍', title: 'Workers\' Comp', desc: 'Disability timelines, return-to-work documentation, and injury causation.' },
+  { icon: '', title: 'Pharmaceutical Litigation', desc: 'Drug event timelines, adverse reaction documentation, and dosage histories.' },
+  { icon: '', title: 'Construction Injury', desc: 'Trauma record analysis, surgical history, and long-term prognosis extraction.' },
 ];
 
 export default function HowItWorks() {
@@ -42,7 +42,7 @@ export default function HowItWorks() {
     <main>
       <section className="hiw-hero section">
         <div className="container">
-          <div className="section-label"><span>●</span> Process</div>
+          <div className="section-label"><span></span> Process</div>
           <h1>From record pile<br /><span style={{ color: 'var(--teal)', fontStyle: 'italic' }}>to case-ready in minutes.</span></h1>
           <p className="hiw-hero__sub">
             Lexx AI turns thousands of pages of unstructured medical records into organized, searchable, flagged case intelligence — automatically.
@@ -59,13 +59,13 @@ export default function HowItWorks() {
                 <div className="hiw-step__num">{s.num}</div>
                 <h2>{s.title}</h2>
                 <p>{s.desc}</p>
-                <div className="hiw-step__detail">✓ {s.detail}</div>
+                <div className="hiw-step__detail"> {s.detail}</div>
               </div>
               <div className="hiw-step__visual">
                 <div className="hiw-step__box">
                   <div className="hiw-step__box-label">Step {s.num}</div>
                   <div className="hiw-step__box-icon">
-                    {['📤', '🧠', '📋', '🔍'][i]}
+                    {['', '', '', ''][i]}
                   </div>
                   <div className="hiw-step__box-title">{s.title}</div>
                 </div>
@@ -79,7 +79,7 @@ export default function HowItWorks() {
       <section className="section" style={{ background: 'var(--bg)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <div className="section-label"><span>●</span> Practice Areas</div>
+            <div className="section-label"><span></span> Practice Areas</div>
             <h2>Built for every case type</h2>
             <p style={{ color: 'var(--slate)', marginTop: '0.75rem' }}>Lexx AI is trained on clinical data across all major personal injury and litigation practice areas.</p>
           </div>
