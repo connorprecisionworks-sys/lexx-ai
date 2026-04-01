@@ -7,130 +7,115 @@ const steps = [
     num: '01',
     title: 'Upload Your Case File',
     desc: 'Drag and drop any file format — PDFs, scanned documents, Word files, and more. Lexx AI accepts them all and begins reading immediately.',
-    detail: 'Supports PDF, TIFF, JPG, Word, and more',
-    bg: 'dark',
   },
   {
     num: '02',
     title: 'AI Reads Every Page',
-    desc: 'Our AI engine reads every page of the record — clinical notes, lab results, imaging reports, provider notes, billing records. Nothing gets skipped.',
-    detail: 'Understands clinical language across all specialties',
-    bg: 'light',
+    desc: 'Our AI engine reads every page — clinical notes, lab results, imaging reports, provider notes, billing records. Nothing gets skipped.',
   },
   {
     num: '03',
     title: 'Records Get Processed',
-    desc: 'Lexx extracts every medical event, diagnosis, treatment, medication, and date — structuring raw unorganized records into clean usable data.',
-    detail: 'Structured extraction across all record types',
-    bg: 'dark',
+    desc: 'Lexx extracts every medical event, diagnosis, treatment, medication, and date — structuring raw records into clean usable data.',
   },
   {
     num: '04',
     title: 'Chronology Generated',
     desc: 'A complete date-ordered medical timeline is built automatically — every event in sequence, gaps flagged, inconsistencies surfaced.',
-    detail: 'Exportable as PDF or Word doc',
-    bg: 'light',
   },
   {
     num: '05',
     title: 'Narrative Created',
     desc: 'Lexx writes a clear medical narrative summarizing the case — ready to drop into a demand letter, mediation brief, or case summary.',
-    detail: 'Plain language, attorney-ready format',
-    bg: 'dark',
   },
   {
     num: '06',
     title: 'Flags Reviewed',
-    desc: 'Pre-existing conditions, causation gaps, missing records, contradictory notes, and defense-side ammunition are all flagged before you ever open a file.',
-    detail: 'Priority flags highlighted for immediate review',
-    bg: 'light',
+    desc: 'Pre-existing conditions, causation gaps, missing records, and contradictory notes are all flagged before you ever open a file.',
   },
   {
     num: '07',
     title: 'Refine With the AI Chatbot',
-    desc: 'Ask Lexx anything about the case in plain English. "What were the patient\'s medications at discharge?" "Were there any prior back injuries?" "What was the last treating physician\'s MMI opinion?" Get precise answers with citations.',
-    detail: 'Natural language Q&A with source citations',
-    bg: 'dark',
+    desc: 'Ask Lexx anything in plain English — medications at discharge, prior injuries, MMI opinions. Get precise answers with source citations.',
   },
   {
     num: '08',
     title: 'Download & Use',
-    desc: 'Export your chronology, narrative, case summary, or flagged records as formatted PDFs or Word documents — ready for demand letters, depositions, or mediation.',
-    detail: 'One-click export in your preferred format',
-    bg: 'light',
+    desc: 'Export your chronology, narrative, case summary, or flagged records as formatted PDFs or Word docs — ready for demand letters or depositions.',
   },
 ];
 
-function TimelineStep({ step, index }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  const isDark = step.bg === 'dark';
-
-  return (
-    <div
-      className={`timeline-step ${isDark ? 'timeline-step--dark' : 'timeline-step--light'}`}
-    >
-      <div
-        ref={ref}
-        className="timeline-step__inner"
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(48px)',
-          transition: `opacity 0.9s ease ${index * 80}ms, transform 0.9s ease ${index * 80}ms`,
-        }}
-      >
-        <div className="timeline-step__num">{step.num}</div>
-        <div className="timeline-step__content">
-          <h2 className="timeline-step__title">{step.title}</h2>
-          <p className="timeline-step__desc">{step.desc}</p>
-          <div className="timeline-step__detail">
-            <span className="timeline-step__check">✓</span>
-            {step.detail}
-          </div>
-        </div>
-        <div className="timeline-step__connector" />
-      </div>
-    </div>
-  );
-}
-
 export default function HowItWorks() {
-  const [heroRef, setHeroRef] = useState(null);
+  const containerRef = useRef(null);
+  const lineRef = useRef(null);
+  const stepRefs = useRef([]);
+  const [visibleSteps, setVisibleSteps] = useState([]);
+  const [lineHeight, setLineHeight] = useState(0);
   const [heroVisible, setHeroVisible] = useState(false);
-  const [ctaRef, setCtaRef] = useState(null);
+  const heroRef = useRef(null);
   const [ctaVisible, setCtaVisible] = useState(false);
+  const ctaRef = useRef(null);
 
   useEffect(() => {
-    if (!heroRef) return;
-    const observer = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setHeroVisible(true); observer.disconnect(); } },
+    const heroEl = heroRef.current;
+    if (!heroEl) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setHeroVisible(true); obs.disconnect(); } },
       { threshold: 0.1 }
     );
-    observer.observe(heroRef);
-    return () => observer.disconnect();
-  }, [heroRef]);
+    obs.observe(heroEl);
+    return () => obs.disconnect();
+  }, []);
 
   useEffect(() => {
-    if (!ctaRef) return;
-    const observer = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setCtaVisible(true); observer.disconnect(); } },
+    const ctaEl = ctaRef.current;
+    if (!ctaEl) return;
+    const obs = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setCtaVisible(true); obs.disconnect(); } },
       { threshold: 0.2 }
     );
-    observer.observe(ctaRef);
-    return () => observer.disconnect();
-  }, [ctaRef]);
+    obs.observe(ctaEl);
+    return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = containerRef.current;
+      const line = lineRef.current;
+      if (!container || !line) return;
+
+      const containerRect = container.getBoundingClientRect();
+      const containerTop = containerRect.top + window.scrollY;
+      const containerHeight = containerRect.height;
+      const scrollY = window.scrollY;
+      const windowH = window.innerHeight;
+
+      // How far through the container we've scrolled (0 to 1)
+      const progress = Math.max(0, Math.min(1,
+        (scrollY + windowH * 0.6 - containerTop) / containerHeight
+      ));
+
+      const newHeight = progress * containerHeight;
+      setLineHeight(newHeight);
+
+      // Check each step dot position
+      const newVisible = [];
+      stepRefs.current.forEach((ref, i) => {
+        if (!ref) return;
+        const dotRect = ref.getBoundingClientRect();
+        const dotTop = dotRect.top + window.scrollY;
+        const dotRelative = dotTop - containerTop;
+        if (newHeight >= dotRelative + 20) {
+          newVisible.push(i);
+        }
+      });
+      setVisibleSteps(newVisible);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <main className="hiw-page">
@@ -138,7 +123,7 @@ export default function HowItWorks() {
       {/* HERO */}
       <section className="hiw-hero">
         <div
-          ref={setHeroRef}
+          ref={heroRef}
           className="hiw-hero__inner"
           style={{
             opacity: heroVisible ? 1 : 0,
@@ -159,16 +144,58 @@ export default function HowItWorks() {
       </section>
 
       {/* TIMELINE */}
-      <div className="timeline">
-        {steps.map((step, i) => (
-          <TimelineStep key={step.num} step={step} index={i} />
-        ))}
-      </div>
+      <section className="hiw-timeline-section">
+        <div className="hiw-timeline" ref={containerRef}>
+
+          {/* The animated line */}
+          <div className="hiw-line-track">
+            <div
+              ref={lineRef}
+              className="hiw-line-fill"
+              style={{ height: `${lineHeight}px` }}
+            />
+          </div>
+
+          {/* Steps */}
+          {steps.map((step, i) => {
+            const isVisible = visibleSteps.includes(i);
+            const isLeft = i % 2 === 0;
+            return (
+              <div
+                key={step.num}
+                className={`hiw-step ${isLeft ? 'hiw-step--left' : 'hiw-step--right'}`}
+              >
+                {/* Card */}
+                <div
+                  className="hiw-card"
+                  style={{
+                    opacity: isVisible ? 1 : 0,
+                    transform: isVisible
+                      ? 'translateX(0) translateY(0)'
+                      : `translateX(${isLeft ? '-24px' : '24px'}) translateY(8px)`,
+                    transition: 'opacity 0.6s ease, transform 0.6s ease',
+                  }}
+                >
+                  <div className="hiw-card__num">{step.num}</div>
+                  <h3 className="hiw-card__title">{step.title}</h3>
+                  <p className="hiw-card__desc">{step.desc}</p>
+                </div>
+
+                {/* Dot on the line */}
+                <div
+                  ref={el => stepRefs.current[i] = el}
+                  className={`hiw-dot ${isVisible ? 'hiw-dot--active' : ''}`}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="hiw-cta">
         <div
-          ref={setCtaRef}
+          ref={ctaRef}
           className="hiw-cta__inner"
           style={{
             opacity: ctaVisible ? 1 : 0,
