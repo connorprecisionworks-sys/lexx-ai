@@ -16,7 +16,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="container navbar__inner">
         <Link to="/" className="navbar__logo">
-          <div className="navbar__logo-mark">L</div>
+          <img src="/logo.png" alt="Lexx AI" className="navbar__logo-img" />
           <span>Lexx <strong>AI</strong></span>
         </Link>
 
