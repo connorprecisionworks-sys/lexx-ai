@@ -3,58 +3,82 @@ import { Link } from 'react-router-dom';
 import './HowItWorks.css';
 
 const steps = [
-  {
-    num: '01',
-    title: 'Upload Your Case File',
-    desc: 'Drag and drop any file format — PDFs, scanned documents, Word files, and more. Lexx AI accepts them all and begins reading immediately.',
-  },
-  {
-    num: '02',
-    title: 'AI Reads Every Page',
-    desc: 'Our AI engine reads every page — clinical notes, lab results, imaging reports, provider notes, billing records. Nothing gets skipped.',
-  },
-  {
-    num: '03',
-    title: 'Records Get Processed',
-    desc: 'Lexx extracts every medical event, diagnosis, treatment, medication, and date — structuring raw records into clean usable data.',
-  },
-  {
-    num: '04',
-    title: 'Chronology Generated',
-    desc: 'A complete date-ordered medical timeline is built automatically — every event in sequence, gaps flagged, inconsistencies surfaced.',
-  },
-  {
-    num: '05',
-    title: 'Narrative Created',
-    desc: 'Lexx writes a clear medical narrative summarizing the case — ready to drop into a demand letter, mediation brief, or case summary.',
-  },
-  {
-    num: '06',
-    title: 'Flags Reviewed',
-    desc: 'Pre-existing conditions, causation gaps, missing records, and contradictory notes are all flagged before you ever open a file.',
-  },
-  {
-    num: '07',
-    title: 'Refine With the AI Chatbot',
-    desc: 'Ask Lexx anything in plain English — medications at discharge, prior injuries, MMI opinions. Get precise answers with source citations.',
-  },
-  {
-    num: '08',
-    title: 'Download & Use',
-    desc: 'Export your chronology, narrative, case summary, or flagged records as formatted PDFs or Word docs — ready for demand letters or depositions.',
-  },
+  { num: '01', title: 'Upload Your Case File', desc: 'Drag and drop any file format — PDFs, scanned documents, Word files, and more. Lexx AI accepts them all and begins reading immediately.' },
+  { num: '02', title: 'AI Reads Every Page', desc: 'Our AI engine reads every page — clinical notes, lab results, imaging reports, provider notes, billing records. Nothing gets skipped.' },
+  { num: '03', title: 'Records Get Processed', desc: 'Lexx extracts every medical event, diagnosis, treatment, medication, and date — structuring raw records into clean usable data.' },
+  { num: '04', title: 'Chronology Generated', desc: 'A complete date-ordered medical timeline is built automatically — every event in sequence, gaps flagged, inconsistencies surfaced.' },
+  { num: '05', title: 'Narrative Created', desc: 'Lexx writes a clear medical narrative summarizing the case — ready for a demand letter, mediation brief, or case summary.' },
+  { num: '06', title: 'Flags Reviewed', desc: 'Pre-existing conditions, causation gaps, missing records, and contradictory notes are all flagged before you ever open a file.' },
+  { num: '07', title: 'Refine With the AI Chatbot', desc: 'Ask Lexx anything in plain English — medications at discharge, prior injuries, MMI opinions. Get precise answers with source citations.' },
+  { num: '08', title: 'Download & Use', desc: 'Export your chronology, narrative, case summary, or flagged records as formatted PDFs or Word docs — ready for demand letters or depositions.' },
 ];
 
+// SVG path for the zigzag line
+// The viewBox is 600 wide. Cards sit at x=50 (left) and x=350 (right), centered at x=300
+// Each row is 180px tall. We alternate: start center-top → left card → center → right card → center → etc.
+function buildZigzagPath(steps) {
+  const W = 600;
+  const centerX = W / 2;
+  const leftX = 110;
+  const rightX = W - 110;
+  const rowH = 200;
+  const dotY = (i) => i * rowH + 60; // vertical center of each card
+
+  let d = `M ${centerX} 0`;
+
+  steps.forEach((_, i) => {
+    const y = dotY(i);
+    const isLeft = i % 2 === 0;
+    const cardX = isLeft ? leftX : rightX;
+    const prevY = i === 0 ? 0 : dotY(i - 1);
+    const midY = (prevY + y) / 2;
+
+    if (i === 0) {
+      d += ` C ${centerX} ${midY}, ${cardX} ${midY}, ${cardX} ${y}`;
+    } else {
+      const prevX = (i - 1) % 2 === 0 ? leftX : rightX;
+      d += ` C ${prevX} ${midY}, ${cardX} ${midY}, ${cardX} ${y}`;
+    }
+  });
+
+  // end line going down
+  const lastY = dotY(steps.length - 1);
+  const lastX = (steps.length - 1) % 2 === 0 ? leftX : rightX;
+  d += ` L ${lastX} ${lastY + 60}`;
+
+  return d;
+}
+
 export default function HowItWorks() {
-  const containerRef = useRef(null);
-  const lineRef = useRef(null);
-  const stepRefs = useRef([]);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [visibleSteps, setVisibleSteps] = useState([]);
-  const [lineHeight, setLineHeight] = useState(0);
+  const sectionRef = useRef(null);
+  const pathRef = useRef(null);
+  const [pathLength, setPathLength] = useState(0);
   const [heroVisible, setHeroVisible] = useState(false);
   const heroRef = useRef(null);
   const [ctaVisible, setCtaVisible] = useState(false);
   const ctaRef = useRef(null);
+
+  const ROW_H = 200;
+  const DOT_OFFSET = 60;
+  const W = 600;
+  const leftX = 110;
+  const rightX = W - 110;
+
+  const getDotPos = (i) => ({
+    x: i % 2 === 0 ? leftX : rightX,
+    y: i * ROW_H + DOT_OFFSET,
+  });
+
+  const svgHeight = steps.length * ROW_H + 120;
+  const pathD = buildZigzagPath(steps);
+
+  useEffect(() => {
+    if (pathRef.current) {
+      setPathLength(pathRef.current.getTotalLength());
+    }
+  }, []);
 
   useEffect(() => {
     const heroEl = heroRef.current;
@@ -80,34 +104,22 @@ export default function HowItWorks() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const container = containerRef.current;
-      const line = lineRef.current;
-      if (!container || !line) return;
+      const section = sectionRef.current;
+      if (!section) return;
 
-      const containerRect = container.getBoundingClientRect();
-      const containerTop = containerRect.top + window.scrollY;
-      const containerHeight = containerRect.height;
-      const scrollY = window.scrollY;
-      const windowH = window.innerHeight;
-
-      // How far through the container we've scrolled (0 to 1)
+      const rect = section.getBoundingClientRect();
+      const sectionTop = rect.top + window.scrollY;
+      const sectionH = rect.height;
       const progress = Math.max(0, Math.min(1,
-        (scrollY + windowH * 0.6 - containerTop) / containerHeight
+        (window.scrollY + window.innerHeight * 0.55 - sectionTop) / (sectionH * 0.9)
       ));
+      setScrollProgress(progress);
 
-      const newHeight = progress * containerHeight;
-      setLineHeight(newHeight);
-
-      // Check each step dot position
+      // Which steps are revealed
       const newVisible = [];
-      stepRefs.current.forEach((ref, i) => {
-        if (!ref) return;
-        const dotRect = ref.getBoundingClientRect();
-        const dotTop = dotRect.top + window.scrollY;
-        const dotRelative = dotTop - containerTop;
-        if (newHeight >= dotRelative + 20) {
-          newVisible.push(i);
-        }
+      steps.forEach((_, i) => {
+        const dotFraction = (i * ROW_H + DOT_OFFSET) / svgHeight;
+        if (progress >= dotFraction * 0.95) newVisible.push(i);
       });
       setVisibleSteps(newVisible);
     };
@@ -115,7 +127,11 @@ export default function HowItWorks() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathLength, svgHeight]);
+
+  const strokeDashoffset = pathLength > 0
+    ? pathLength * (1 - scrollProgress)
+    : pathLength;
 
   return (
     <main className="hiw-page">
@@ -143,52 +159,94 @@ export default function HowItWorks() {
         </div>
       </section>
 
-      {/* TIMELINE */}
-      <section className="hiw-timeline-section">
-        <div className="hiw-timeline" ref={containerRef}>
+      {/* ZIGZAG TIMELINE */}
+      <section className="hiw-timeline-section" ref={sectionRef}>
+        <div className="hiw-timeline-wrap">
 
-          {/* The animated line */}
-          <div className="hiw-line-track">
-            <div
-              ref={lineRef}
-              className="hiw-line-fill"
-              style={{ height: `${lineHeight}px` }}
+          {/* SVG line layer */}
+          <svg
+            className="hiw-svg"
+            viewBox={`0 0 ${W} ${svgHeight}`}
+            preserveAspectRatio="xMidYMid meet"
+            style={{ height: svgHeight }}
+          >
+            {/* Ghost track */}
+            <path
+              d={pathD}
+              fill="none"
+              stroke="#e8e8e6"
+              strokeWidth="2"
+              strokeLinecap="round"
             />
-          </div>
+            {/* Animated fill */}
+            <path
+              ref={pathRef}
+              d={pathD}
+              fill="none"
+              stroke="#0a0a0a"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeDasharray={pathLength}
+              strokeDashoffset={strokeDashoffset}
+              style={{ transition: 'stroke-dashoffset 0.08s linear' }}
+            />
+            {/* Dots */}
+            {steps.map((_, i) => {
+              const pos = getDotPos(i);
+              const isActive = visibleSteps.includes(i);
+              return (
+                <circle
+                  key={i}
+                  cx={pos.x}
+                  cy={pos.y}
+                  r={isActive ? 7 : 5}
+                  fill={isActive ? '#0a0a0a' : '#e8e8e6'}
+                  stroke={isActive ? '#0a0a0a' : '#d0d0ce'}
+                  strokeWidth="2"
+                  style={{ transition: 'r 0.3s ease, fill 0.3s ease' }}
+                />
+              );
+            })}
+          </svg>
 
-          {/* Steps */}
-          {steps.map((step, i) => {
-            const isVisible = visibleSteps.includes(i);
-            const isLeft = i % 2 === 0;
-            return (
-              <div
-                key={step.num}
-                className={`hiw-step ${isLeft ? 'hiw-step--left' : 'hiw-step--right'}`}
-              >
-                {/* Card */}
+          {/* Cards layer — absolutely positioned over SVG */}
+          <div
+            className="hiw-cards-layer"
+            style={{ height: svgHeight }}
+          >
+            {steps.map((step, i) => {
+              const pos = getDotPos(i);
+              const isLeft = i % 2 === 0;
+              const isVisible = visibleSteps.includes(i);
+              const cardXPercent = (pos.x / W) * 100;
+
+              return (
                 <div
-                  className="hiw-card"
+                  key={i}
+                  className={`hiw-card-wrap ${isLeft ? 'hiw-card-wrap--left' : 'hiw-card-wrap--right'}`}
                   style={{
-                    opacity: isVisible ? 1 : 0,
-                    transform: isVisible
-                      ? 'translateX(0) translateY(0)'
-                      : `translateX(${isLeft ? '-24px' : '24px'}) translateY(8px)`,
-                    transition: 'opacity 0.6s ease, transform 0.6s ease',
+                    top: pos.y - 44,
+                    left: isLeft ? '0%' : '50%',
                   }}
                 >
-                  <div className="hiw-card__num">{step.num}</div>
-                  <h3 className="hiw-card__title">{step.title}</h3>
-                  <p className="hiw-card__desc">{step.desc}</p>
+                  <div
+                    className="hiw-card"
+                    style={{
+                      opacity: isVisible ? 1 : 0,
+                      transform: isVisible
+                        ? 'translateX(0) scale(1)'
+                        : `translateX(${isLeft ? '-20px' : '20px'}) scale(0.97)`,
+                      transition: 'opacity 0.55s ease, transform 0.55s ease',
+                    }}
+                  >
+                    <div className="hiw-card__num">{step.num}</div>
+                    <h3 className="hiw-card__title">{step.title}</h3>
+                    <p className="hiw-card__desc">{step.desc}</p>
+                  </div>
                 </div>
-
-                {/* Dot on the line */}
-                <div
-                  ref={el => stepRefs.current[i] = el}
-                  className={`hiw-dot ${isVisible ? 'hiw-dot--active' : ''}`}
-                />
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </section>
 
