@@ -301,6 +301,51 @@ export default function Home() {
           display: block;
         }
 
+        /* Testimonial */
+        .lexx-testimonial {
+          background: #f0f0ee;
+          border-top: 1px solid #d8d8d6;
+          border-bottom: 1px solid #d8d8d6;
+          padding: 64px 60px;
+          text-align: center;
+        }
+
+        .lexx-testimonial__inner {
+          max-width: 680px;
+          margin: 0 auto;
+        }
+
+        .lexx-testimonial__quote {
+          font-family: 'Playfair Display', serif;
+          font-size: clamp(1.3rem, 3vw, 1.8rem);
+          font-weight: 700;
+          font-style: italic;
+          color: #0a0a0a;
+          line-height: 1.5;
+          margin: 0 0 24px;
+        }
+
+        .lexx-testimonial__meta {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          font-size: 0.85rem;
+          color: #606060;
+          flex-wrap: wrap;
+        }
+
+        .lexx-testimonial__tag {
+          background: #0a0a0a;
+          color: #f8f8f6;
+          padding: 4px 12px;
+          border-radius: 100px;
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
+        }
+
         /* Clients deserve better section */
         .clients-section {
           background: #0a0a0a;
@@ -412,7 +457,7 @@ export default function Home() {
         <div className="lexx-badge">Now in Beta</div>
 
         <h1 className="lexx-headline">
-          <span style={{ display: "block" }}>From record pile</span>
+          <span style={{ display: "block" }}>From case file</span>
           <span className="lexx-rotating-wrapper" style={{ height: wordHeight + "px" }}>
             <span
               className="lexx-rotating-inner"
@@ -481,6 +526,19 @@ export default function Home() {
           <Link to="/contact" className="clients-section__cta">
             Get Early Access &rarr;
           </Link>
+        </div>
+      </section>
+
+      {/* TESTIMONIAL */}
+      <section className="lexx-testimonial">
+        <div className="lexx-testimonial__inner">
+          <blockquote className="lexx-testimonial__quote">
+            "I've tried ChatGPT — it gets it wrong every time. I spend more time correcting it than getting work done."
+          </blockquote>
+          <div className="lexx-testimonial__meta">
+            — Personal Injury Paralegal
+            <span className="lexx-testimonial__tag">Why firms are switching to Lexx</span>
+          </div>
         </div>
       </section>
 

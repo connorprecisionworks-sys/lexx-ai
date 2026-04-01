@@ -1,108 +1,184 @@
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './HowItWorks.css';
 
 const steps = [
   {
     num: '01',
-    title: 'Upload Your Medical Records',
-    desc: 'Drag and drop any file format — PDFs, scanned documents, DICOM reports, billing records, pharmacy logs. Lexx AI handles them all. Records are encrypted immediately on upload.',
-    detail: 'Supports: PDF, TIFF, JPG, Word, HL7, DICOM, and more',
+    title: 'Upload Your Case File',
+    desc: 'Drag and drop any file format — PDFs, scanned documents, Word files, and more. Lexx AI accepts them all and begins reading immediately.',
+    detail: 'Supports PDF, TIFF, JPG, Word, and more',
+    bg: 'dark',
   },
   {
     num: '02',
-    title: 'AI Reads and Extracts Everything',
-    desc: 'Our clinical AI engine reads every page, identifies key medical events, diagnoses, treatments, medications, and provider notes. It understands clinical language the same way a trained medical reviewer would — but in seconds.',
-    detail: '99.2% extraction accuracy across 80+ medical specialties',
+    title: 'AI Reads Every Page',
+    desc: 'Our AI engine reads every page of the record — clinical notes, lab results, imaging reports, provider notes, billing records. Nothing gets skipped.',
+    detail: 'Understands clinical language across all specialties',
+    bg: 'light',
   },
   {
     num: '03',
-    title: 'Get a Complete Case Chronology',
-    desc: 'Lexx AI generates a structured, date-ordered timeline of all medical events, flagging causation gaps, pre-existing conditions, treatment gaps, and inconsistencies between providers automatically.',
-    detail: 'Exportable as PDF, Word, or structured data',
+    title: 'Records Get Processed',
+    desc: 'Lexx extracts every medical event, diagnosis, treatment, medication, and date — structuring raw unorganized records into clean usable data.',
+    detail: 'Structured extraction across all record types',
+    bg: 'dark',
   },
   {
     num: '04',
-    title: 'Review, Flag & Collaborate',
-    desc: 'Your team reviews the AI output inside Lexx — annotate, highlight, ask follow-up questions in natural language ("Were there any prior back injuries before the accident?"), and export case-ready summaries.',
-    detail: 'Multi-user access with role-based permissions',
+    title: 'Chronology Generated',
+    desc: 'A complete date-ordered medical timeline is built automatically — every event in sequence, gaps flagged, inconsistencies surfaced.',
+    detail: 'Exportable as PDF or Word doc',
+    bg: 'light',
+  },
+  {
+    num: '05',
+    title: 'Narrative Created',
+    desc: 'Lexx writes a clear medical narrative summarizing the case — ready to drop into a demand letter, mediation brief, or case summary.',
+    detail: 'Plain language, attorney-ready format',
+    bg: 'dark',
+  },
+  {
+    num: '06',
+    title: 'Flags Reviewed',
+    desc: 'Pre-existing conditions, causation gaps, missing records, contradictory notes, and defense-side ammunition are all flagged before you ever open a file.',
+    detail: 'Priority flags highlighted for immediate review',
+    bg: 'light',
+  },
+  {
+    num: '07',
+    title: 'Refine With the AI Chatbot',
+    desc: 'Ask Lexx anything about the case in plain English. "What were the patient\'s medications at discharge?" "Were there any prior back injuries?" "What was the last treating physician\'s MMI opinion?" Get precise answers with citations.',
+    detail: 'Natural language Q&A with source citations',
+    bg: 'dark',
+  },
+  {
+    num: '08',
+    title: 'Download & Use',
+    desc: 'Export your chronology, narrative, case summary, or flagged records as formatted PDFs or Word documents — ready for demand letters, depositions, or mediation.',
+    detail: 'One-click export in your preferred format',
+    bg: 'light',
   },
 ];
 
-const useCases = [
-  { icon: '', title: 'Personal Injury', desc: 'Causation analysis, gap identification, treating vs. IME discrepancies.' },
-  { icon: '', title: 'Mass Tort', desc: 'Scale record review across thousands of plaintiffs with consistent AI analysis.' },
-  { icon: '', title: 'Medical Malpractice', desc: 'Standard of care analysis, event sequencing, and provider note extraction.' },
-  { icon: '‍', title: 'Workers\' Comp', desc: 'Disability timelines, return-to-work documentation, and injury causation.' },
-  { icon: '', title: 'Pharmaceutical Litigation', desc: 'Drug event timelines, adverse reaction documentation, and dosage histories.' },
-  { icon: '', title: 'Construction Injury', desc: 'Trauma record analysis, surgical history, and long-term prognosis extraction.' },
-];
+function TimelineStep({ step, index }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); observer.disconnect(); } },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const isDark = step.bg === 'dark';
+
+  return (
+    <div
+      className={`timeline-step ${isDark ? 'timeline-step--dark' : 'timeline-step--light'}`}
+    >
+      <div
+        ref={ref}
+        className="timeline-step__inner"
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'translateY(0)' : 'translateY(48px)',
+          transition: `opacity 0.9s ease ${index * 80}ms, transform 0.9s ease ${index * 80}ms`,
+        }}
+      >
+        <div className="timeline-step__num">{step.num}</div>
+        <div className="timeline-step__content">
+          <h2 className="timeline-step__title">{step.title}</h2>
+          <p className="timeline-step__desc">{step.desc}</p>
+          <div className="timeline-step__detail">
+            <span className="timeline-step__check">✓</span>
+            {step.detail}
+          </div>
+        </div>
+        <div className="timeline-step__connector" />
+      </div>
+    </div>
+  );
+}
 
 export default function HowItWorks() {
+  const [heroRef, setHeroRef] = useState(null);
+  const [heroVisible, setHeroVisible] = useState(false);
+  const [ctaRef, setCtaRef] = useState(null);
+  const [ctaVisible, setCtaVisible] = useState(false);
+
+  useEffect(() => {
+    if (!heroRef) return;
+    const observer = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setHeroVisible(true); observer.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    observer.observe(heroRef);
+    return () => observer.disconnect();
+  }, [heroRef]);
+
+  useEffect(() => {
+    if (!ctaRef) return;
+    const observer = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) { setCtaVisible(true); observer.disconnect(); } },
+      { threshold: 0.2 }
+    );
+    observer.observe(ctaRef);
+    return () => observer.disconnect();
+  }, [ctaRef]);
+
   return (
-    <main>
-      <section className="hiw-hero section">
-        <div className="container">
-          <div className="section-label"><span></span> Process</div>
-          <h1>From record pile<br /><span style={{ color: 'var(--teal)', fontStyle: 'italic' }}>to case-ready in minutes.</span></h1>
+    <main className="hiw-page">
+
+      {/* HERO */}
+      <section className="hiw-hero">
+        <div
+          ref={setHeroRef}
+          className="hiw-hero__inner"
+          style={{
+            opacity: heroVisible ? 1 : 0,
+            transform: heroVisible ? 'translateY(0)' : 'translateY(32px)',
+            transition: 'opacity 0.9s ease, transform 0.9s ease',
+          }}
+        >
+          <div className="hiw-hero__label">Process</div>
+          <h1 className="hiw-hero__headline">
+            From case file<br />
+            <span className="hiw-hero__accent">to case-ready in minutes.</span>
+          </h1>
           <p className="hiw-hero__sub">
-            Lexx AI turns thousands of pages of unstructured medical records into organized, searchable, flagged case intelligence — automatically.
+            Lexx AI turns thousands of pages of unstructured medical records into
+            organized, searchable, flagged case intelligence — automatically.
           </p>
         </div>
       </section>
 
-      {/* STEPS */}
-      <section className="section hiw-steps">
-        <div className="container">
-          {steps.map((s, i) => (
-            <div key={s.num} className={`hiw-step ${i % 2 === 1 ? 'reverse' : ''}`}>
-              <div className="hiw-step__content">
-                <div className="hiw-step__num">{s.num}</div>
-                <h2>{s.title}</h2>
-                <p>{s.desc}</p>
-                <div className="hiw-step__detail"> {s.detail}</div>
-              </div>
-              <div className="hiw-step__visual">
-                <div className="hiw-step__box">
-                  <div className="hiw-step__box-label">Step {s.num}</div>
-                  <div className="hiw-step__box-icon">
-                    {['', '', '', ''][i]}
-                  </div>
-                  <div className="hiw-step__box-title">{s.title}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* USE CASES */}
-      <section className="section" style={{ background: 'var(--bg)' }}>
-        <div className="container">
-          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-            <div className="section-label"><span></span> Practice Areas</div>
-            <h2>Built for every case type</h2>
-            <p style={{ color: 'var(--slate)', marginTop: '0.75rem' }}>Lexx AI is trained on clinical data across all major personal injury and litigation practice areas.</p>
-          </div>
-          <div className="uc-grid">
-            {useCases.map(u => (
-              <div key={u.title} className="card uc-card">
-                <div className="uc-card__icon">{u.icon}</div>
-                <h3>{u.title}</h3>
-                <p>{u.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* TIMELINE */}
+      <div className="timeline">
+        {steps.map((step, i) => (
+          <TimelineStep key={step.num} step={step} index={i} />
+        ))}
+      </div>
 
       {/* CTA */}
-      <section className="section">
-        <div className="container" style={{ textAlign: 'center' }}>
+      <section className="hiw-cta">
+        <div
+          ref={setCtaRef}
+          className="hiw-cta__inner"
+          style={{
+            opacity: ctaVisible ? 1 : 0,
+            transform: ctaVisible ? 'translateY(0)' : 'translateY(32px)',
+            transition: 'opacity 0.9s ease, transform 0.9s ease',
+          }}
+        >
           <h2>See it work on a real case</h2>
-          <p style={{ color: 'var(--slate)', margin: '1rem 0 2rem', fontSize: '1.05rem' }}>
-            Book a 20-minute demo and we'll run Lexx AI on a sample record set from your practice area.
-          </p>
-          <Link to="/contact" className="btn-primary">Book Your Demo →</Link>
+          <p>Book a 20-minute demo and we'll run Lexx AI on a sample record set from your practice area.</p>
+          <Link to="/contact" className="hiw-cta__btn">Book Your Demo →</Link>
         </div>
       </section>
     </main>
