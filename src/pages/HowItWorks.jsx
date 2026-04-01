@@ -218,8 +218,6 @@ export default function HowItWorks() {
               const pos = getDotPos(i);
               const isLeft = i % 2 === 0;
               const isVisible = visibleSteps.includes(i);
-              const cardXPercent = (pos.x / W) * 100;
-
               return (
                 <div
                   key={i}
