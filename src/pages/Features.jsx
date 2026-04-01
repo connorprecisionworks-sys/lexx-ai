@@ -22,8 +22,7 @@ const featureSections = [
     features: [
       { title: 'Natural Language Q&A', desc: 'Ask questions about any record in plain English. Get precise answers with citations back to the source document.' },
       { title: 'One-Click Export', desc: 'Export chronologies, summaries, and flagged records as formatted PDFs or Word docs — ready for demand letters, depositions, or mediation.' },
-      { title: 'Team Collaboration', desc: 'Assign cases, leave annotations, track review status, and share outputs — all inside Lexx with role-based access control.' },
-      { title: 'Practice Management Integrations', desc: 'Connect to Clio, MyCase, Filevine, and other leading case management platforms.' },
+
     ],
   },
 ];
