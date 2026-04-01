@@ -178,6 +178,38 @@
   color: #0a0a0a;
 }
 
+.pricing-card__volume {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0a0a0a;
+  margin-bottom: 12px;
+}
+
+.pricing-card.highlight .pricing-card__volume {
+  color: #0a0a0a;
+}
+
+.pricing-btn-white {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f6;
+  color: #0a0a0a;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.pricing-btn-white:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+}
+
 .pricing-card__desc {
   font-size: 0.85rem;
   color: #606060;
