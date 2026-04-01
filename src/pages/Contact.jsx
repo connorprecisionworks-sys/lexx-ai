@@ -1,5 +1,10 @@
 import { useState } from 'react';
+import emailjs from '@emailjs/browser';
 import './Contact.css';
+
+const SERVICE_ID = 'service_mfkwpvt';
+const TEMPLATE_ID = 'template_vp44bo8';
+const PUBLIC_KEY = 'rMSMaa_jaOYeCvYmU';
 
 const practiceAreas = [
   'Personal Injury', 'Mass Tort', 'Medical Malpractice',
@@ -9,7 +14,7 @@ const practiceAreas = [
 
 const caseVolumes = [
   '1–10 cases/month',
-  '10–50 cases/month', 
+  '10–50 cases/month',
   '50–200 cases/month',
   '200+ cases/month',
 ];
@@ -49,6 +54,8 @@ const expectItems = [
 
 export default function Contact() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     name: '', email: '', firm: '', phone: '',
     area: '', caseVolume: '', recordVolume: '',
@@ -67,9 +74,34 @@ export default function Contact() {
     }
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setLoading(true);
+    setError('');
+
+    try {
+      await emailjs.send(
+        SERVICE_ID,
+        TEMPLATE_ID,
+        {
+          name: form.name,
+          email: form.email,
+          firm: form.firm,
+          phone: form.phone || 'Not provided',
+          area: form.area,
+          caseVolume: form.caseVolume || 'Not provided',
+          recordVolume: form.recordVolume || 'Not provided',
+          painPoints: form.painPoints.length > 0 ? form.painPoints.join(', ') : 'Not selected',
+          message: form.message || 'No additional message',
+        },
+        PUBLIC_KEY
+      );
+      setSubmitted(true);
+    } catch (err) {
+      setError('Something went wrong. Please try again or email us directly.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -84,23 +116,23 @@ export default function Contact() {
             <span className="contact-hero__accent">save this month.</span>
           </h1>
           <p className="contact-hero__sub">
-            The average Lexx AI firm saves 48 hours of paralegal time per month. 
-            In a 20-minute call, we'll show you exactly what that looks like for your caseload.
+            We're onboarding our first beta firms now. In a 20-minute call,
+            we'll show you exactly how Lexx AI works on your case types.
           </p>
           <div className="contact-hero__proof">
             <div className="proof-item">
-              <span className="proof-number">85%</span>
-              <span className="proof-label">Faster record review</span>
+              <span className="proof-number">Beta</span>
+              <span className="proof-label">Early access open</span>
             </div>
             <div className="proof-divider" />
             <div className="proof-item">
-              <span className="proof-number">48 hrs</span>
-              <span className="proof-label">Saved per month</span>
+              <span className="proof-number">20 min</span>
+              <span className="proof-label">Live demo call</span>
             </div>
             <div className="proof-divider" />
             <div className="proof-item">
-              <span className="proof-number">$1,440</span>
-              <span className="proof-label">In paralegal time</span>
+              <span className="proof-number">Free</span>
+              <span className="proof-label">No credit card needed</span>
             </div>
           </div>
         </div>
@@ -110,7 +142,7 @@ export default function Contact() {
       <section className="contact-body">
         <div className="contact-layout">
 
-          {/* LEFT — What to expect */}
+          {/* LEFT */}
           <div className="contact-info">
             <h2 className="contact-info__heading">What happens on the call</h2>
             <div className="expect-list">
@@ -128,26 +160,26 @@ export default function Contact() {
             <div className="contact-trust">
               <div className="trust-item">No hard sell — ever</div>
               <div className="trust-item">No credit card required</div>
-              <div className="trust-item">HIPAA compliant platform</div>
-              <div className="trust-item">14-day free trial included</div>
+              <div className="trust-item">Built for personal injury firms</div>
+              <div className="trust-item">Early access — shape the product</div>
             </div>
 
             <blockquote className="contact-quote">
-              "We cut our record review time from 3 days to 3 hours. 
+              "We cut our record review time from 3 days to 3 hours.
               The ROI was clear within the first week."
               <cite>— Senior Paralegal, Personal Injury Firm</cite>
             </blockquote>
           </div>
 
-          {/* RIGHT — Form */}
+          {/* FORM */}
           <div className="contact-form-wrap">
             {submitted ? (
               <div className="contact-success">
-                <div className="contact-success__icon"></div>
+                <div className="contact-success__icon">✓</div>
                 <h3>You're on the list.</h3>
                 <p>
-                  We'll reach out to <strong>{form.email}</strong> within 1 business day 
-                  to schedule your demo. We've noted your focus on <strong>{form.area || 'your practice area'}</strong> — 
+                  We'll reach out to <strong>{form.email}</strong> within 1 business day
+                  to schedule your demo. We've noted your focus on <strong>{form.area || 'your practice area'}</strong> —
                   we'll make sure the walkthrough is relevant.
                 </p>
                 <div className="success-next">
@@ -166,7 +198,6 @@ export default function Contact() {
                   <p>Takes 2 minutes. We use this to personalize your walkthrough.</p>
                 </div>
 
-                {/* Basic info */}
                 <div className="form-section-label">Your info</div>
                 <div className="form-row">
                   <div className="form-group">
@@ -189,7 +220,6 @@ export default function Contact() {
                   </div>
                 </div>
 
-                {/* Practice */}
                 <div className="form-section-label">Your practice</div>
                 <div className="form-row">
                   <div className="form-group">
@@ -208,15 +238,16 @@ export default function Contact() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Avg. Medical Record Size Per Case</label>
+                  <label>Avg. Record Size Per Case</label>
                   <select name="recordVolume" value={form.recordVolume} onChange={handleChange}>
                     <option value="">Select range...</option>
                     {recordVolumes.map(v => <option key={v} value={v}>{v}</option>)}
                   </select>
                 </div>
 
-                {/* Pain points */}
-                <div className="form-section-label">What's slowing you down? <span className="form-section-hint">(select all that apply)</span></div>
+                <div className="form-section-label">
+                  What's slowing you down? <span className="form-section-hint">(select all that apply)</span>
+                </div>
                 <div className="pain-points-grid">
                   {painPoints.map(point => (
                     <button
@@ -230,7 +261,6 @@ export default function Contact() {
                   ))}
                 </div>
 
-                {/* Message */}
                 <div className="form-group" style={{ marginTop: '1.25rem' }}>
                   <label>Anything specific you want to see?</label>
                   <textarea
@@ -242,8 +272,14 @@ export default function Contact() {
                   />
                 </div>
 
-                <button type="submit" className="form-submit-btn">
-                  Book My Demo →
+                {error && (
+                  <p style={{ color: '#c0392b', fontSize: '0.85rem', marginBottom: '0.75rem' }}>
+                    {error}
+                  </p>
+                )}
+
+                <button type="submit" className="form-submit-btn" disabled={loading}>
+                  {loading ? 'Sending...' : 'Book My Demo →'}
                 </button>
                 <p className="form-disclaimer">No spam. No hard sell. We'll never share your information.</p>
               </form>
