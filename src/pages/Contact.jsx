@@ -7,48 +7,48 @@ const TEMPLATE_ID = 'template_vp44bo8';
 const PUBLIC_KEY = 'rMSMaa_jaOYeCvYmU';
 
 const practiceAreas = [
-  'Personal Injury', 'Mass Tort', 'Medical Malpractice',
-  'Workers\' Compensation', 'Pharmaceutical Litigation',
-  'Construction Injury', 'Other',
+  'Construction Defect', 'Delay Claims',
+  'Payment Disputes', 'Contractor Disputes',
+  'General Construction Litigation', 'Other',
 ];
 
 const caseVolumes = [
-  '1–10 cases/month',
-  '10–50 cases/month',
-  '50–200 cases/month',
-  '200+ cases/month',
+  '1–5 matters/month',
+  '5–15 matters/month',
+  '15–30 matters/month',
+  '30+ matters/month',
 ];
 
 const recordVolumes = [
-  'Under 500 pages/case',
-  '500–2,000 pages/case',
-  '2,000–5,000 pages/case',
-  '5,000+ pages/case',
+  'Under 500 pages/matter',
+  '500–2,000 pages/matter',
+  '2,000–5,000 pages/matter',
+  '5,000+ pages/matter',
 ];
 
 const painPoints = [
-  'Manual record review taking too long',
-  'Missing critical details in records',
-  'Paralegal time being wasted on paperwork',
-  'Scaling to handle more cases',
-  'Building demand letters and chronologies',
+  'Building delay timelines by hand',
+  'Hunting contradictions across change orders and daily logs',
+  'Paralegal hours lost to document review',
+  'Drafting demand letters and claim narratives',
+  'Scaling to handle more active matters',
 ];
 
 const expectItems = [
   {
     step: '01',
-    title: '20-minute live walkthrough',
-    desc: 'We process a real record set from your practice area — not a scripted demo.',
+    title: '15-minute walkthrough on a real case file',
+    desc: 'We run Lexx on a sample construction case file — contracts, RFIs, daily logs, change orders, depositions. Not a scripted demo.',
   },
   {
     step: '02',
-    title: 'Built around your firm',
-    desc: 'We\'ll focus on the case types and workflows that matter most to your team.',
+    title: 'Live contradiction detection on a delay claim',
+    desc: "We'll show you how Lexx finds date mismatches, conflicting delay attribution, and shifting fault allocation across a real matter.",
   },
   {
     step: '03',
-    title: 'Same-day trial access',
-    desc: 'If you\'re ready, we can spin up your firm\'s account before the call ends.',
+    title: 'Design partner — not just a customer',
+    desc: "If it's a fit, we onboard you as a design partner. You get full access; we build around your actual matters and workflows.",
   },
 ];
 
@@ -116,7 +116,7 @@ export default function Contact() {
             <span className="contact-hero__accent">save this month.</span>
           </h1>
           <p className="contact-hero__sub">
-            We're onboarding our first beta firms now. In a 20-minute call,
+            We're onboarding our first beta construction litigation firms now. In a 20-minute call,
             we'll show you exactly how Lexx AI works on your case types.
           </p>
           <div className="contact-hero__proof">
@@ -160,14 +160,13 @@ export default function Contact() {
             <div className="contact-trust">
               <div className="trust-item">No hard sell — ever</div>
               <div className="trust-item">No credit card required</div>
-              <div className="trust-item">Built for personal injury firms</div>
+              <div className="trust-item">Built for construction litigation firms</div>
               <div className="trust-item">Early access — shape the product</div>
             </div>
 
             <blockquote className="contact-quote">
-              "We cut our record review time from 3 days to 3 hours.
-              The ROI was clear within the first week."
-              <cite>— Senior Paralegal, Personal Injury Firm</cite>
+              "I used to spend two days just building the timeline on a delay claim. Now I spend that time on the argument itself."
+              <cite>— Construction Litigation Partner, South Florida Boutique</cite>
             </blockquote>
           </div>
 
@@ -185,9 +184,9 @@ export default function Contact() {
                 <div className="success-next">
                   <p>While you wait — here's what to have ready:</p>
                   <ul>
-                    <li>A recent case with medical records</li>
-                    <li>Your current record review workflow</li>
-                    <li>Any specific record types you deal with most</li>
+                    <li>A recent case with construction case files</li>
+                    <li>Your current case file review workflow</li>
+                    <li>Any specific file types you deal with most</li>
                   </ul>
                 </div>
               </div>
@@ -230,7 +229,7 @@ export default function Contact() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label>Monthly Case Volume</label>
+                    <label>Active Matters</label>
                     <select name="caseVolume" value={form.caseVolume} onChange={handleChange}>
                       <option value="">Select range...</option>
                       {caseVolumes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -238,7 +237,7 @@ export default function Contact() {
                   </div>
                 </div>
                 <div className="form-group">
-                  <label>Avg. Record Size Per Case</label>
+                  <label>Avg. Case File Size Per Case</label>
                   <select name="recordVolume" value={form.recordVolume} onChange={handleChange}>
                     <option value="">Select range...</option>
                     {recordVolumes.map(v => <option key={v} value={v}>{v}</option>)}
@@ -268,7 +267,7 @@ export default function Contact() {
                     rows={3}
                     value={form.message}
                     onChange={handleChange}
-                    placeholder="e.g. We handle a lot of TBI cases and want to see how Lexx handles neurology records..."
+                    placeholder="e.g. What's the most painful part of building timelines, finding contradictions, or drafting demand letters across a construction case file?"
                   />
                 </div>
 

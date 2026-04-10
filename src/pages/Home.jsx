@@ -3,31 +3,31 @@ import { Link } from 'react-router-dom';
 import './Home.css';
 
 const ROTATING_WORDS = [
-  "to demand letter",
-  "to narrative",
-  "to chronology",
+  "to claim letter",
+  "to delay narrative",
+  "to timeline",
   "to case summary",
 ];
 
 const problems = [
   {
-    title: 'Medical records are dense and disorganized',
-    desc: 'Thousands of pages of unstructured clinical notes, lab results, imaging reports, and billing codes buried across multiple providers.'
+    title: 'Thousands of pages per case',
+    desc: 'Contracts, RFIs, daily logs, change orders, schedule updates, and depositions scattered across every contractor, subcontractor, and project phase — with no way to see it all at once.'
   },
   {
-    title: 'Manual review is costing you billable hours',
-    desc: "Paralegals and associates spend weeks manually reading records — time that doesn't scale and eats into your firm's profitability."
+    title: 'Manual review burns paralegal hours',
+    desc: "Building delay timelines and chasing contradictions by hand takes weeks. That time doesn't scale, and it pulls your best people away from work that actually moves cases forward."
   },
   {
-    title: 'Critical details get missed',
-    desc: 'Pre-existing conditions, causation gaps, and inconsistencies buried on page 847 of 1,200 can sink a case or delay settlement.'
+    title: 'Critical contradictions get missed',
+    desc: 'The date in the daily log that contradicts the change order. The delay attribution that quietly shifts between letters. These details win and lose cases — and they hide in plain sight.'
   },
 ];
 
 const solutions = [
   { label: 'AI-Powered Extraction' },
-  { label: 'Instant Chronologies' },
-  { label: 'Built for Litigators' },
+  { label: 'Instant Timelines' },
+  { label: 'Built for Construction Litigators' },
 ];
 
 function useFadeUp(threshold = 0.15) {
@@ -81,6 +81,9 @@ export default function Home() {
   const [ctaRef, ctaVisible] = useFadeUp();
   const [dashboardRef, dashboardVisible] = useFadeUp(0.05);
 
+  const revealRef = useRef(null);
+  const [revealAnimated, setRevealAnimated] = useState(false);
+
   useEffect(() => {
     if (firstWordRef.current) {
       setWordHeight(firstWordRef.current.offsetHeight);
@@ -91,7 +94,60 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const el = revealRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setRevealAnimated(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
+  const revealFeatures = [
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="9" y1="13" x2="15" y2="13"/>
+          <line x1="9" y1="17" x2="12" y2="17"/>
+        </svg>
+      ),
+      label: 'AI-Powered Extraction',
+      desc: 'Contracts, RFIs, daily logs, change orders, and depositions parsed automatically — every fact, date, and dollar amount pulled and structured.',
+    },
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="8" y1="6" x2="21" y2="6"/>
+          <line x1="8" y1="12" x2="21" y2="12"/>
+          <line x1="8" y1="18" x2="21" y2="18"/>
+          <line x1="3" y1="6" x2="3.01" y2="6"/>
+          <line x1="3" y1="12" x2="3.01" y2="12"/>
+          <line x1="3" y1="18" x2="3.01" y2="18"/>
+        </svg>
+      ),
+      label: 'Instant Timelines',
+      desc: 'Every event from every document merged into one chronological view, with source attribution on every entry.',
+    },
+    {
+      icon: (
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        </svg>
+      ),
+      label: 'Built for Construction Litigators',
+      desc: 'Delay claims, defect cases, payment disputes, contractor disputes — case-type-specific checklists and draft generation for all four.',
+    },
+  ];
 
   return (
     <main>
@@ -450,6 +506,132 @@ export default function Home() {
           .lexx-btn-primary, .lexx-btn-secondary { justify-content: center; }
           .clients-section { padding: 72px 24px; }
         }
+
+        /* ── ONE-SHOT REVEAL SECTION ── */
+        .reveal-section {
+          background: #f8f8f6;
+          border-top: 1px solid #d8d8d6;
+          padding: 100px 0;
+        }
+
+        .reveal-layout {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 60px;
+          display: flex;
+          align-items: center;
+        }
+
+        .reveal-copy {
+          flex: 0 0 40%;
+          display: flex;
+          flex-direction: column;
+          gap: 36px;
+          z-index: 2;
+        }
+
+        .reveal-eyebrow {
+          font-size: 0.72rem;
+          font-weight: 500;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #606060;
+          margin: 0 0 4px;
+          font-family: "DM Sans", sans-serif;
+        }
+
+        .reveal-bullet {
+          display: flex;
+          align-items: flex-start;
+          gap: 18px;
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        .reveal-bullet__icon {
+          flex-shrink: 0;
+          width: 42px;
+          height: 42px;
+          border-radius: 10px;
+          background: #0a0a0a;
+          color: #f8f8f6;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-top: 1px;
+        }
+
+        .reveal-bullet__text strong {
+          display: block;
+          font-size: 1rem;
+          font-weight: 600;
+          color: #0a0a0a;
+          margin-bottom: 6px;
+          font-family: "DM Sans", sans-serif;
+          line-height: 1.3;
+        }
+
+        .reveal-bullet__text p {
+          font-size: 0.88rem;
+          color: #606060;
+          line-height: 1.7;
+          margin: 0;
+          font-family: "DM Sans", sans-serif;
+        }
+
+        .reveal-image-wrap {
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .reveal-image-img {
+          width: 100%;
+          max-width: 640px;
+          border-radius: 14px;
+          border: 1px solid #d8d8d6;
+          box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 24px 48px rgba(0,0,0,0.1), 0 48px 80px rgba(0,0,0,0.06);
+          display: block;
+          background: #e8e8e6;
+          min-height: 360px;
+        }
+
+        /* Animate only when motion is OK — triggered by .reveal-animated class */
+        @media (prefers-reduced-motion: no-preference) {
+          .reveal-image-wrap {
+            will-change: transform;
+            transition: transform 700ms ease-out;
+          }
+          .reveal-animated .reveal-image-wrap {
+            transform: translateX(14%);
+          }
+          .reveal-bullet {
+            will-change: opacity, transform;
+            transition: opacity 600ms ease-out, transform 600ms ease-out;
+          }
+          .reveal-animated .reveal-bullet {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        /* Reduced motion: skip transitions, show final state immediately */
+        @media (prefers-reduced-motion: reduce) {
+          .reveal-bullet { opacity: 1; transform: none; }
+          .reveal-image-wrap { transform: translateX(14%); }
+        }
+
+        /* Mobile: static stacked layout, no animation */
+        @media (max-width: 768px) {
+          .reveal-section { padding: 60px 0; }
+          .reveal-layout { flex-direction: column; padding: 0 24px; gap: 40px; align-items: stretch; }
+          .reveal-copy { flex: none; width: 100%; gap: 28px; }
+          .reveal-bullet { opacity: 1 !important; transform: none !important; transition: none !important; }
+          .reveal-image-wrap { flex: none; width: 100%; transform: none !important; transition: none !important; order: -1; }
+          .reveal-image-img { max-width: 100%; min-height: 200px; }
+        }
       `}</style>
 
       {/* HERO */}
@@ -479,9 +661,9 @@ export default function Home() {
         </h1>
 
         <p className="lexx-sub">
-          Lexx AI reads, extracts, and summarizes medical records so your team
-          can focus on strategy — not paperwork. Built for personal injury and
-          anyone who needs to process records at scale.
+          AI-powered intelligence for construction litigation. Upload contracts, RFIs,
+          daily logs, change orders, and depositions — get timelines, contradictions,
+          and draft-ready output in minutes.
         </p>
 
         <div className="lexx-actions">
@@ -492,7 +674,7 @@ export default function Home() {
         <div className="lexx-early-access">
           <span className="lexx-early-tag">Early Access</span>
           <p className="lexx-early-text">
-            We're onboarding our first beta firms now. <strong>Join the waitlist</strong> to get early access and shape the product with us.
+            We're recruiting <strong>design partners</strong> from South Florida construction litigation boutiques. Join the waitlist to get early access and shape the product with us.
           </p>
         </div>
 
@@ -517,11 +699,10 @@ export default function Home() {
         >
           <div className="clients-section__label">Why it matters</div>
           <h2 className="clients-section__headline">
-            Your clients deserve<br /><em>better than buried records.</em>
+            Your clients deserve<br /><em>better than buried case files.</em>
           </h2>
           <p className="clients-section__sub">
-            Every missed detail is a missed opportunity — for your case, your client, and your firm.
-            Lexx AI makes sure nothing gets left on the table.
+            Contracts, RFIs, daily logs, change orders, schedules, depositions — scattered across thousands of pages, filed by dozens of parties. Critical contradictions and timeline gaps hide in plain sight. Your client's case depends on finding them. Lexx AI makes sure you do.
           </p>
           <Link to="/contact" className="clients-section__cta">
             Get Early Access &rarr;
@@ -529,14 +710,52 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ONE-SHOT REVEAL FEATURE SECTION */}
+      <section
+        ref={revealRef}
+        className={`reveal-section${revealAnimated ? ' reveal-animated' : ''}`}
+        aria-label="Feature highlights"
+      >
+        <div className="reveal-layout">
+
+          {/* LEFT: staggered feature bullets */}
+          <div className="reveal-copy">
+            <p className="reveal-eyebrow">What Lexx does</p>
+            {revealFeatures.map((f, i) => (
+              <div
+                key={f.label}
+                className="reveal-bullet"
+                style={{ transitionDelay: `${i * 200}ms` }}
+              >
+                <div className="reveal-bullet__icon">{f.icon}</div>
+                <div className="reveal-bullet__text">
+                  <strong>{f.label}</strong>
+                  <p>{f.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* RIGHT: screenshot — slides right on first reveal */}
+          <div className="reveal-image-wrap">
+            <img
+              src="/images/dashboard-detail.png"
+              alt="Lexx AI — construction case file intelligence dashboard"
+              className="reveal-image-img"
+            />
+          </div>
+
+        </div>
+      </section>
+
       {/* TESTIMONIAL */}
       <section className="lexx-testimonial">
         <div className="lexx-testimonial__inner">
           <blockquote className="lexx-testimonial__quote">
-            "I've tried ChatGPT — it gets it wrong every time. I spend more time correcting it than getting work done."
+            "Building a delay timeline by hand means opening 40 different files and hoping you catch every contradiction. One missed change order date and the whole argument falls apart."
           </blockquote>
           <div className="lexx-testimonial__meta">
-            — Personal Injury Paralegal
+            — Paralegal, Construction Litigation Boutique
             <span className="lexx-testimonial__tag">Why firms are switching to Lexx</span>
           </div>
         </div>
@@ -549,7 +768,7 @@ export default function Home() {
             ref={problemsRef}
             className={`problem-section__header fade-up${problemsVisible ? ' visible' : ''}`}
           >
-            <h2>Medical record review<br />shouldn't be this hard</h2>
+            <h2>Construction case file review<br />shouldn't be this hard</h2>
             <p>Your team is spending days on work that should take minutes. There's a better way.</p>
           </div>
           <div className="problem-section__grid">

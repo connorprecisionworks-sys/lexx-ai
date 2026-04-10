@@ -351,7 +351,7 @@ export default function HeroSection() {
         </h1>
 
         <p className="lexx-sub">
-          Lexx AI reads, extracts, and summarizes medical records so your team
+          Lexx AI reads, extracts, and summarizes construction case files so your team
           can focus on strategy — not paperwork.
         </p>
 

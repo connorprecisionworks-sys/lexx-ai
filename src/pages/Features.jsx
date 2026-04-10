@@ -4,14 +4,14 @@ import './Features.css';
 const featureSections = [
   {
     label: 'Core Intelligence',
-    title: 'AI that understands clinical language',
-    sub: 'Not just keyword matching — Lexx AI reasons through medical context the way a trained nurse-paralegal would.',
+    title: 'AI that understands construction project language',
+    sub: 'Not just keyword matching — Lexx AI reasons through construction project context the way a trained construction paralegal would.',
     bg: 'light',
     features: [
-      { title: 'Clinical NLP Engine', desc: 'Understands ICD codes, CPT codes, drug names, anatomical terminology, and physician shorthand — across all specialties.' },
-      { title: 'Automatic Chronologies', desc: 'Every medical event extracted and placed on a precise timeline. Gaps, overlaps, and conflicts flagged automatically.' },
-      { title: 'Causation Analysis', desc: 'Lexx maps the injury chain from incident to treatment, identifying pre-existing conditions and inconsistencies that affect case value.' },
-      { title: 'Smart Flagging', desc: 'Suspicious gaps, contradictory notes, missing records, and defense-side ammunition flagged before you ever open a file.' },
+      { title: 'Construction Document NLP', desc: 'Lexx understands construction-specific language: RFIs, change orders, schedule narratives, daily logs, deposition Q&A. Trained on the document types you actually deal with — not generic legal text.' },
+      { title: 'Unified Case Timelines', desc: 'Every event from every document merged into one chronological view, with source attribution on every entry. See the whole case in order for the first time.' },
+      { title: 'Contradiction Detection', desc: 'Lexx actively hunts for contradictions across your case file: date mismatches, conflicting delay attribution, dollar amounts that don\'t reconcile, fault allocation that shifts between letters. Every flag comes with an explanation and source citations.' },
+      { title: 'Smart Flagging', desc: 'Auto-flags missing information, high-significance deposition admissions, follow-up questions, and contradictions across documents. Manual flagging available on any passage.' },
     ],
   },
   {
@@ -20,9 +20,8 @@ const featureSections = [
     sub: "Lexx AI doesn't replace your workflow — it powers it.",
     bg: 'dark',
     features: [
-      { title: 'Natural Language Q&A', desc: 'Ask questions about any record in plain English. Get precise answers with citations back to the source document.' },
-      { title: 'One-Click Export', desc: 'Export chronologies, summaries, and flagged records as formatted PDFs or Word docs — ready for demand letters, depositions, or mediation.' },
-
+      { title: 'Natural Language Q&A', desc: 'Case-scoped chat with inline citations. Ask anything about the file — "when did the owner first know about the cracking?" — and get answers with the source document linked. Hard scoped to the current matter only.' },
+      { title: 'One-Click Export', desc: 'Every draft — claim letter, delay narrative, defect summary, mediation brief outline, deposition outline, motion outline, client update — exports as a real Word document ready for your letterhead.' },
     ],
   },
 ];
@@ -36,10 +35,10 @@ export default function Features() {
         <div className="feat-hero__label">Features</div>
         <h1 className="feat-hero__headline">
           Everything your team needs<br />
-          <span className="feat-hero__accent">to master medical records.</span>
+          <span className="feat-hero__accent">to master construction case files.</span>
         </h1>
         <p className="feat-hero__sub">
-          Lexx AI is a complete medical record intelligence platform — not just a summarizer.
+          Lexx AI is a complete construction case file intelligence platform — not just a summarizer.
           Here's what's under the hood.
         </p>
       </section>

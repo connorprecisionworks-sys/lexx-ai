@@ -5,13 +5,14 @@ import './Pricing.css';
 const plans = [
   {
     name: 'Starter',
-    volume: '2–5 cases/month',
-    desc: 'For solo practitioners and small firms beginning to explore AI-powered record review.',
+    volume: '2–5 matters/month',
+    desc: 'For solo construction litigators and boutiques getting started with AI-powered timeline building, contradiction detection, and draft generation.',
     features: [
-      'AI chronology generation',
-      'Clinical event extraction',
+      'Unified timeline generation',
+      'Contradiction and gap detection',
+      'Deposition analysis',
+      'Draft generation (claim letters, delay narratives)',
       'PDF & Word export',
-      'Natural language Q&A',
       'Email support',
     ],
     cta: 'Book a Call',
@@ -19,14 +20,14 @@ const plans = [
   },
   {
     name: 'Growth',
-    volume: '5–18 cases/month',
-    desc: 'For growing litigation firms handling more volume and needing team collaboration tools.',
+    volume: '5–18 matters/month',
+    desc: 'For established construction litigation boutiques running multiple active matters — defect, delay, payment, and contractor disputes — simultaneously.',
     features: [
       'Everything in Starter',
-      'Smart causation flagging',
+      'All eight construction draft types',
+      'Cross-matter contradiction detection',
       'Team collaboration tools',
       'Priority support + onboarding',
-      'Practice management integrations',
     ],
     cta: 'Book a Call',
     highlight: true,
@@ -34,13 +35,13 @@ const plans = [
   },
   {
     name: 'Scale',
-    volume: '18+ cases/month',
-    desc: 'For high-volume firms and mass tort practices that need unlimited capacity and dedicated support.',
+    volume: '18+ matters/month',
+    desc: 'For construction practice groups at general civil firms running high volume across defect, delay, payment dispute, and contractor matters.',
     features: [
       'Everything in Growth',
-      'Unlimited case volume',
+      'Unlimited matter volume',
       'Dedicated success manager',
-      'Custom AI tuning',
+      'Custom AI tuning for your case types',
       'White-label available',
     ],
     cta: 'Book a Call',
@@ -49,11 +50,11 @@ const plans = [
 ];
 
 const faqs = [
-  { q: 'Is there a free trial?', a: "Yes — all tiers include a 14-day free trial. No credit card required. We'll onboard your team and process a sample case set during the trial." },
-  { q: 'How does billing work?', a: 'We offer monthly and annual billing. Annual plans include a discount. Pricing is discussed on your onboarding call based on your firm\'s specific needs.' },
-  { q: 'Can I change tiers later?', a: 'Absolutely. You can upgrade or downgrade at any time. Upgrades take effect immediately; downgrades apply at the next billing cycle.' },
-  { q: 'What counts as a case?', a: 'A case is a single matter or plaintiff. You can upload unlimited records per case.' },
-  { q: 'Is my data used to train AI models?', a: 'No. Your records and case data are never used to train Lexx AI or any third-party models. Your data is yours, always.' },
+  { q: 'What document types does Lexx handle?', a: 'Contracts, RFIs, daily logs, change orders, schedule updates, depositions, correspondence, and expert reports. PDF, DOCX, and TXT are all supported. Lexx identifies each document type automatically and applies the right extraction logic.' },
+  { q: 'How does Lexx handle confidentiality and attorney work product?', a: 'Your case files are processed in a single-tenant environment scoped to your matters only. Nothing you upload is ever used to train Lexx or any third-party model. All output is protected attorney work product.' },
+  { q: 'Can I try it before committing?', a: "Yes. We run a design partner program for South Florida construction litigation boutiques — you get full access, we get feedback, and we build around your real matters. Book a call to apply." },
+  { q: 'How is this different from ediscovery tools like Relativity or Everlaw?', a: "Lexx isn't ediscovery. It sits on top of your existing document stack and does the analysis and drafting work paralegals currently do by hand — unified timelines, contradiction detection across every document in the matter, and draft generation across eight construction-specific output types." },
+  { q: 'What kinds of construction matters does it support?', a: 'Construction defect, delay claims, payment disputes, and contractor disputes. Lexx understands all four case types and runs case-type-specific checklists — so the contradictions and gaps it flags are the ones that actually matter for your theory of the case.' },
 ];
 
 export default function Pricing() {
@@ -71,7 +72,7 @@ export default function Pricing() {
             <span className="pricing-hero__accent">Pricing on a call.</span>
           </h1>
           <p className="pricing-hero__sub">
-            Every firm is different. Pick the tier that fits your volume and we'll walk you through pricing on a 20-minute call.
+            Every construction litigation firm is different. Pick the tier that fits your case volume and we'll walk you through pricing on a 20-minute call.
           </p>
         </div>
       </section>

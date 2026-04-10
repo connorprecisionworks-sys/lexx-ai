@@ -10,10 +10,10 @@ export default function Footer() {
             <div className="footer__logo-mark">L</div>
             <span>Lexx <strong>AI</strong></span>
           </div>
-          <p>Medical record intelligence<br />built for legal teams.</p>
+          <p>Construction case file intelligence<br />built for legal teams.</p>
           <p className="footer__hipaa">
-            <span className="hipaa-badge">HIPAA Compliant</span>
             <span className="hipaa-badge">SOC 2 Ready</span>
+            <span className="hipaa-badge">Attorney Work Product Protected</span>
           </p>
         </div>
 

@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import './HowItWorks.css';
 
 const steps = [
-  { num: '01', title: 'Upload Your Case File', desc: 'Drag and drop any file format — PDFs, scanned documents, Word files, and more. Lexx AI accepts them all and begins reading immediately.' },
-  { num: '02', title: 'AI Reads Every Page', desc: 'Our AI engine reads every page — clinical notes, lab results, imaging reports, provider notes, billing records. Nothing gets skipped.' },
-  { num: '03', title: 'Records Get Processed', desc: 'Lexx extracts every medical event, diagnosis, treatment, medication, and date — structuring raw records into clean usable data.' },
-  { num: '04', title: 'Chronology Generated', desc: 'A complete date-ordered medical timeline is built automatically — every event in sequence, gaps flagged, inconsistencies surfaced.' },
-  { num: '05', title: 'Narrative Created', desc: 'Lexx writes a clear medical narrative summarizing the case — ready for a demand letter, mediation brief, or case summary.' },
-  { num: '06', title: 'Flags Reviewed', desc: 'Pre-existing conditions, causation gaps, missing records, and contradictory notes are all flagged before you ever open a file.' },
-  { num: '07', title: 'Refine With the AI Chatbot', desc: 'Ask Lexx anything in plain English — medications at discharge, prior injuries, MMI opinions. Get precise answers with source citations.' },
-  { num: '08', title: 'Download & Use', desc: 'Export your chronology, narrative, case summary, or flagged records as formatted PDFs or Word docs — ready for demand letters or depositions.' },
+  { num: '01', title: 'Upload Your Case File', desc: 'Drag in contracts, RFIs, daily logs, change orders, schedule updates, depositions, and correspondence. PDF, DOCX, and TXT all accepted — Lexx begins reading immediately.' },
+  { num: '02', title: 'AI Reads Every Page', desc: 'Lexx parses each document, identifies its type — contract, RFI, daily log, change order, deposition — and extracts the substance. Nothing gets skipped.' },
+  { num: '03', title: 'Extract Facts and Events', desc: 'Pulls out dates, parties, dollar amounts, delay attributions, defect descriptions, and key admissions from depositions — structured and ready to work with.' },
+  { num: '04', title: 'Build the Unified Timeline', desc: 'Every event from every document, merged chronologically with source attribution. See the entire case in order — across all parties and all files — for the first time.' },
+  { num: '05', title: 'Generate the Narrative', desc: 'Claim letters, delay narratives, defect summaries, mediation brief outlines — drafted in your voice with bracketed placeholders for anything that needs your input.' },
+  { num: '06', title: 'Surface Contradictions and Gaps', desc: 'Lexx actively hunts for contradictions across documents — dates, amounts, fault attribution, sequence of events — and flags missing information before it blindsides you.' },
+  { num: '07', title: 'Ask the Case File Anything', desc: 'Case-scoped chat with citations. Ask "when did the owner first know about the cracking?" and get an answer with the source document linked.' },
+  { num: '08', title: 'Export to Word', desc: 'Every draft exports as a real .docx file ready for your letterhead — chronology, narrative, contradiction report, or full case summary.' },
 ];
 
 // SVG path for the zigzag line
@@ -153,7 +153,7 @@ export default function HowItWorks() {
             <span className="hiw-hero__accent">to case-ready in minutes.</span>
           </h1>
           <p className="hiw-hero__sub">
-            Lexx AI turns thousands of pages of unstructured medical records into
+            Lexx AI turns thousands of pages of unstructured construction case files into
             organized, searchable, flagged case intelligence — automatically.
           </p>
         </div>
