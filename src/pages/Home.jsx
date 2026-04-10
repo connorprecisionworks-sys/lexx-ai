@@ -684,8 +684,8 @@ export default function Home() {
         >
           <span className="lexx-dashboard-label">Live Dashboard</span>
           <img
-            src="/dashboard.png"
-            alt="Lexx AI Case Review Dashboard"
+            src="/images/dashboard-main.png"
+            alt="Lexx dashboard showing active construction litigation matters, document counts, and recent activity"
             className="lexx-dashboard-img"
           />
         </div>
@@ -740,7 +740,7 @@ export default function Home() {
           <div className="reveal-image-wrap">
             <img
               src="/images/dashboard-detail.png"
-              alt="Lexx AI — construction case file intelligence dashboard"
+              alt="Lexx case-scoped chat generating an in-depth case summary with citations to source documents"
               className="reveal-image-img"
             />
           </div>
